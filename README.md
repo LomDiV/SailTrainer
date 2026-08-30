@@ -1,6 +1,7 @@
 # ⛵ SBF Sail Trainer & Exam Suite
 
 [![Status](https://img.shields.io/badge/Status-Alpha%20(v0.1)-orange?style=flat&logo=target&logoColor=white)](#-alpha-status)
+[![Build and Test Docker Image](https://github.com/LomDiV/SailTrainer/actions/workflows/docker-build.yml/badge.svg)](https://github.com/LomDiV/SailTrainer/actions/workflows/docker-build.yml)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![SBF Binnen & See](https://img.shields.io/badge/Catalogs-SBF%20Binnen%20%26%20See-0077B6?style=flat&logo=safari&logoColor=white)](#question-catalogs)

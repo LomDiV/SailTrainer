@@ -1,0 +1,119 @@
+name: Build and Test Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*.*.*'
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+# Ensure permissions to read repo and publish packages to GitHub Container Registry (GHCR)
+permissions:
+  contents: read
+  packages: write
+
+# Cancel superseded in-flight builds on pull requests
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-test:
+    name: Build, Test & Publish Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU (Multi-architecture support)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract Docker metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=sha-,format=short
+
+      # Log in to GitHub Container Registry only for non-PR pushes
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and export to Docker daemon for local health-check verification
+      - name: Build local image for testing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Dockerfile
+          load: true
+          tags: sbf-trainer:test
+          cache-from: type=gha
+
+      # Verify the container boots up and API endpoints respond
+      - name: Test Docker Container Health
+        run: |
+          echo "Starting test container..."
+          docker run -d --name sbf-test -p 8000:8000 sbf-trainer:test
+          
+          echo "Waiting for server to become healthy..."
+          for i in {1..10}; do
+            if curl -s -f http://localhost:8000/api/health > /dev/null; then
+              echo "Server is healthy!"
+              break
+            fi
+            echo "Waiting ($i/10)..."
+            sleep 1
+          done
+
+          echo "Testing /api/health endpoint..."
+          curl -s -f http://localhost:8000/api/health | grep -q '"status": "ok"' || (echo "Health check failed!" && exit 1)
+
+          echo "Testing /api/catalogs endpoint..."
+          curl -s -f http://localhost:8000/api/catalogs | grep -q 'Fragenkatalog' || (echo "Catalogs endpoint check failed!" && exit 1)
+
+          echo "Testing root / index.html..."
+          curl -s -f http://localhost:8000/ | grep -q 'SBF' || (echo "Root endpoint check failed!" && exit 1)
+
+          echo "Stopping test container..."
+          docker stop sbf-test && docker rm sbf-test
+          echo "All container tests passed successfully!"
+
+      # Build and push multi-architecture image to GHCR
+      - name: Build and push multi-platform image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
