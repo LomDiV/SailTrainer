@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SBF Sail Trainer - Sportbootführerschein Lernen</title>
+    <meta name="description" content="Offizieller Fragenkatalog Trainer für den Sportbootführerschein Binnen & See mit Spaced Repetition und 5er-Serie Meisterschaft.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-ambient"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="navbar">
+            <a href="#" class="brand" id="brandLogo">
+                <span class="brand-icon">⛵</span>
+                <span>SBF Trainer</span>
+                <span class="brand-badge">2023/2024</span>
+            </a>
+
+            <div class="nav-actions">
+                <button class="btn-icon" id="btnAudioToggle" title="Ton umschalten (Stumm/Aktiv)">
+                    <span id="audioIcon">🔊</span>
+                </button>
+                <button class="btn-icon" id="btnThemeToggle" title="Design wechseln (Dunkel/Hell)">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <button class="btn-icon" id="btnStatsModal" title="Statistiken & Fortschritt">
+                    <span>📊</span>
+                </button>
+                <button class="btn-icon" id="btnSettingsModal" title="Einstellungen & Sicherung">
+                    <span>⚙️</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Controls Bar -->
+        <div class="controls-bar">
+            <div class="select-wrapper">
+                <select id="catalogSelect" title="Fragenkatalog auswählen">
+                    <option value="" disabled selected>Lade Kataloge...</option>
+                </select>
+                <span class="select-arrow">▼</span>
+            </div>
+
+            <div class="select-wrapper">
+                <select id="sectionSelect" title="Abschnitt filtern">
+                    <option value="all">Alle Abschnitte</option>
+                </select>
+                <span class="select-arrow">▼</span>
+            </div>
+
+            <button class="btn btn-secondary" id="btnShuffleQueue" title="Fragenreihenfolge neu mischen">
+                <span>🔀</span> Mischen
+            </button>
+        </div>
+
+        <!-- Mode Selector Tabs -->
+        <nav class="mode-tabs">
+            <button class="mode-tab active" data-mode="training">
+                <span>🎯</span> Training <span class="badge" id="badgeTrainingCount">0</span>
+            </button>
+            <button class="mode-tab" data-mode="mistakes">
+                <span>⚠️</span> Fehler <span class="badge" id="badgeMistakesCount">0</span>
+            </button>
+            <button class="mode-tab" data-mode="exam">
+                <span>⏱️</span> Prüfung
+            </button>
+            <button class="mode-tab" data-mode="all">
+                <span>📚</span> Alle <span class="badge" id="badgeAllCount">0</span>
+            </button>
+            <button class="mode-tab" data-mode="bookmarked">
+                <span>⭐</span> Gemerkt <span class="badge" id="badgeBookmarkedCount">0</span>
+            </button>
+        </nav>
+
+        <!-- Quick Stats Summary -->
+        <section class="progress-summary">
+            <div class="stat-chip mastered">
+                <span class="stat-label">Gemeistert (5x)</span>
+                <span class="stat-value" id="statMastered">0</span>
+            </div>
+            <div class="stat-chip in-progress">
+                <span class="stat-label">In Bearbeitung</span>
+                <span class="stat-value" id="statInProgress">0</span>
+            </div>
+            <div class="stat-chip mistakes">
+                <span class="stat-label">Falsch beantwortet</span>
+                <span class="stat-value" id="statMistakes">0</span>
+            </div>
+            <div class="stat-chip accuracy">
+                <span class="stat-label">Trefferquote</span>
+                <span class="stat-value" id="statAccuracy">0%</span>
+            </div>
+        </section>
+
+        <!-- Exam HUD (Only active during exam simulation) -->
+        <div class="exam-hud" id="examHud">
+            <div class="exam-timer" id="examTimerDisplay">
+                <span>⏱️</span> <span id="examTimer">45:00</span>
+            </div>
+            <div id="examProgressCount" style="font-weight: 600;">
+                Frage <span id="examCurrentNum">1</span> von 30
+            </div>
+            <button class="btn btn-danger" id="btnFinishExam" style="padding: 6px 14px; font-size: 0.85rem;">
+                Prüfung beenden
+            </button>
+        </div>
+
+        <!-- Main Question Area -->
+        <main class="question-card" id="questionCard">
+            <!-- Header with Section, Question ID, Streak visualizer, Bookmark -->
+            <div class="question-header">
+                <div class="question-meta">
+                    <span class="tag-badge" id="qSectionTag">Basisfragen</span>
+                    <span class="tag-badge tag-id" id="qIdTag">Frage #1</span>
+                    <span class="tag-badge" id="qQueuePosTag" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">1 / 100</span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <!-- 5-Streak Visualizer -->
+                    <div class="streak-tracker" id="streakTracker" title="5 richtige Antworten in Folge zum Meistern">
+                        <span class="streak-label">Serie:</span>
+                        <div class="streak-dots" id="streakDots">
+                            <span class="streak-dot"></span>
+                            <span class="streak-dot"></span>
+                            <span class="streak-dot"></span>
+                            <span class="streak-dot"></span>
+                            <span class="streak-dot"></span>
+                        </div>
+                    </div>
+
+                    <!-- Bookmark Button -->
+                    <button class="btn-icon" id="btnBookmark" title="Frage merken / Lesezeichen">
+                        <span id="bookmarkIcon">☆</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scenario Box (for Navigationsaufgaben) -->
+            <div class="scenario-box" id="scenarioBox" style="display: none;">
+                <div class="scenario-title">
+                    <span>🧭</span> Navigations-Szenario
+                </div>
+                <div id="scenarioText"></div>
+            </div>
+
+            <!-- Question Prompt Text -->
+            <div class="question-text" id="questionText">
+                Lade Fragen...
+            </div>
+
+            <!-- Question Image -->
+            <div class="question-image-container" id="questionImageContainer" style="display: none;">
+                <img id="questionImage" class="question-img" alt="Fragen-Abbildung">
+                <span class="zoom-hint">🔍 Klicken zum Vergrößern</span>
+            </div>
+
+            <!-- Multiple Choice Answers -->
+            <div class="answers-grid" id="answersGrid">
+                <!-- Answer items injected via JS -->
+            </div>
+
+            <!-- Flashcard Solution Mode (for open navigation tasks) -->
+            <div class="flashcard-view" id="flashcardView">
+                <button class="btn btn-primary" id="btnRevealSolution" style="width: 100%;">
+                    💡 Musterlösung anzeigen
+                </button>
+
+                <div class="solution-box" id="solutionBox">
+                    <div class="solution-title">Offizielle Lösung / Rechenweg:</div>
+                    <div class="solution-content" id="solutionText"></div>
+
+                    <div style="margin-top: 14px; font-size: 0.9rem; color: var(--text-secondary);">
+                        Hattest du das Ergebnis richtig gelöst?
+                    </div>
+
+                    <div class="self-grade-actions">
+                        <button class="btn btn-success" id="btnSelfCorrect" style="flex: 1;">
+                            ✅ Richtig gelöst
+                        </button>
+                        <button class="btn btn-danger" id="btnSelfWrong" style="flex: 1;">
+                            ❌ Falsch / Nicht gewusst
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Banner -->
+            <div class="feedback-banner" id="feedbackBanner">
+                <div class="feedback-message" id="feedbackMessage">
+                    <span>✅</span> Richtig beantwortet!
+                </div>
+                <div class="feedback-detail" id="feedbackDetail">
+                    Serie: 1/5 🔥 (Noch 4 bis zur Meisterschaft)
+                </div>
+            </div>
+
+            <!-- Action Controls Bar -->
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="btnPrevQuestion" style="display: none;">
+                    ← Zurück
+                </button>
+
+                <div style="display: flex; gap: 8px; margin-left: auto;">
+                    <button class="btn btn-secondary" id="btnResetQuestionStreak" title="Serie für diese Frage zurücksetzen" style="padding: 10px 14px;">
+                        <span>🔄</span> Serie reset
+                    </button>
+
+                    <button class="btn btn-primary btn-next" id="btnNextQuestion">
+                        <span>Nächste Frage</span>
+                        <span class="keyboard-hint">Leertaste / Enter</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Empty / Complete State Screen -->
+        <section class="empty-state" id="emptyState">
+            <div class="empty-icon" id="emptyIcon">🎉</div>
+            <h2 class="empty-title" id="emptyTitle">Alle Fragen gemeistert!</h2>
+            <p class="empty-desc" id="emptyDesc">
+                Großartige Leistung! Alle Fragen in dieser Auswahl wurden mindestens 5-mal in Folge korrekt beantwortet.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btnRestartAll">
+                    📚 Alle Fragen wiederholen
+                </button>
+                <button class="btn btn-secondary" id="btnRestartSection">
+                    🔄 Filter anpassen
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Stats & Progress Modal -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">📊 Lernfortschritt & Statistiken</h3>
+                <button class="modal-close" data-close="statsModal">&times;</button>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h4 style="font-size: 1rem; margin-bottom: 12px; color: var(--text-primary);">Gesamtübersicht</h4>
+                <div class="progress-summary" style="margin-bottom: 12px;">
+                    <div class="stat-chip mastered">
+                        <span class="stat-label">Meister (5/5)</span>
+                        <span class="stat-value" id="modalStatMastered">0</span>
+                    </div>
+                    <div class="stat-chip in-progress">
+                        <span class="stat-label">In Arbeit</span>
+                        <span class="stat-value" id="modalStatInProgress">0</span>
+                    </div>
+                    <div class="stat-chip mistakes">
+                        <span class="stat-label">Fehlerquote</span>
+                        <span class="stat-value" id="modalStatMistakes">0</span>
+                    </div>
+                    <div class="stat-chip accuracy">
+                        <span class="stat-label">Erfolgsquote</span>
+                        <span class="stat-value" id="modalStatAccuracy">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4 style="font-size: 1rem; margin-bottom: 12px; color: var(--text-primary);">Fortschritt nach Themenbereichen</h4>
+                <div id="sectionProgressList">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <button class="btn btn-danger" id="btnResetCurrentCatalog" style="font-size: 0.88rem;">
+                    ⚠️ Fortschritt für diesen Katalog zurücksetzen
+                </button>
+                <button class="btn btn-secondary" data-close="statsModal">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings & Backup Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ Einstellungen & Datensicherung</h3>
+                <button class="modal-close" data-close="settingsModal">&times;</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+                <!-- Audio Toggle -->
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 600;">Soundeffekte</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Akustische Rückmeldung bei richtiger/falscher Antwort</div>
+                    </div>
+                    <input type="checkbox" id="settingSoundToggle" style="width: 22px; height: 22px; cursor: pointer;">
+                </div>
+
+                <!-- Auto Advance -->
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 600;">Automatisch weiterblättern</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Nach richtiger Antwort direkt zur nächsten Frage wechseln</div>
+                    </div>
+                    <input type="checkbox" id="settingAutoAdvanceToggle" style="width: 22px; height: 22px; cursor: pointer;">
+                </div>
+
+                <!-- Mastery Streak Threshold -->
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Meisterschafts-Kriterium</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Wie oft muss eine Frage in Folge richtig beantwortet werden?</div>
+                    <select id="settingMasteryThreshold" style="width: 100%; height: 38px; border-radius: var(--radius-sm); padding: 0 10px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color);">
+                        <option value="3">3-mal in Folge</option>
+                        <option value="5" selected>5-mal in Folge (Standard)</option>
+                        <option value="7">7-mal in Folge</option>
+                        <option value="10">10-mal in Folge (Hardcore)</option>
+                    </select>
+                </div>
+
+                <!-- Backup Export / Import -->
+                <div style="padding-top: 14px; border-top: 1px solid var(--border-color);">
+                    <div style="font-weight: 600; margin-bottom: 6px;">Lernstand sichern & übertragen</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                        Alle Statistiken liegen lokal auf Ihrem Gerät (keine Online-Datenbank nötig). Sie können den Lernstand als Datei exportieren und auf einem anderen Gerät importieren.
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="btnExportBackup" style="flex: 1;">
+                            📥 Lernstand exportieren (JSON)
+                        </button>
+                        <label class="btn btn-secondary" style="flex: 1; cursor: pointer;">
+                            📤 Importieren
+                            <input type="file" id="importBackupFile" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" data-close="settingsModal">
+                    Fertig
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Results Modal -->
+    <div class="modal-overlay" id="examResultModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="examResultTitle">🏆 Prüfungsergebnis</h3>
+                <button class="modal-close" data-close="examResultModal">&times;</button>
+            </div>
+
+            <div style="text-align: center; padding: 20px 0;">
+                <div id="examResultBadge" style="font-size: 3.5rem; margin-bottom: 10px;">🎉</div>
+                <h2 id="examResultStatus" style="font-size: 1.8rem; margin-bottom: 8px;">BESTANDEN!</h2>
+                <p id="examResultScore" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 20px;">
+                    Du hast 28 von 30 Fragen richtig beantwortet (93%).
+                </p>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+                    Benötigt zum Bestehen: Mindestens 24 von 30 Punkten.
+                </div>
+            </div>
+
+            <div id="examMistakesSection" style="margin-top: 10px; display: none;">
+                <h4 style="font-size: 1rem; color: var(--color-coral); margin-bottom: 10px;">❌ Falsch beantwortete Fragen:</h4>
+                <div id="examMistakesList" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <button class="btn btn-primary" id="btnRestartExam">
+                    🔄 Neue Prüfung starten
+                </button>
+                <button class="btn btn-secondary" data-close="examResultModal">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Zoom Modal -->
+    <div class="lightbox-overlay" id="lightboxModal" title="Klicken zum Schließen">
+        <img id="lightboxImage" class="lightbox-img" alt="Großansicht">
+    </div>
+
+    <!-- Confetti Canvas/Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- JavaScript Scripts -->
+    <script src="/js/storage.js"></script>
+    <script src="/js/audio.js"></script>
+    <script src="/js/quiz_engine.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

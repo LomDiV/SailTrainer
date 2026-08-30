@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: sbf-sail-trainer
+    env: python
+    buildCommand: ""
+    startCommand: python3 src/app.py --port $PORT --host 0.0.0.0
+    envVars:
+      - key: PORT
+        value: 10000

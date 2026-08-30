@@ -1,0 +1,4 @@
+# Zero external dependencies required!
+# Standard Python 3.8+ runs directly with `python3 app.py`
+# Optional for WSGI production deployments:
+# gunicorn>=21.2.0
