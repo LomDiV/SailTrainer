@@ -1,4 +1,6 @@
-# SBF Sail Trainer - Web Application
+# SBF Sail Trainer - Web Application (Alpha)
+
+> **Status**: *Alpha (v0.1-alpha)* — Active development & testing.
 
 A responsive web application for learning and mastering the official German Sportbootführerschein (SBF Binnen & SBF See) question catalogs.
 
