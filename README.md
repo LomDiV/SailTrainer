@@ -146,7 +146,17 @@ Open your browser and navigate to:
 
 ### 2. Run with Docker
 
-Build and run the self-contained container:
+#### Option A: Prebuilt Image (GitHub Container Registry)
+
+Run instantly without cloning or building locally:
+
+```bash
+docker run -d -p 8000:8000 --name sbf-trainer ghcr.io/lomdiv/sailtrainer:latest
+```
+
+#### Option B: Build from Source
+
+Build and run the self-contained container locally:
 
 ```bash
 # Build the Docker image
@@ -283,9 +293,15 @@ This repository includes a `src/render.yaml` and `src/Procfile` ready for zero-c
 
 ### Docker Container Deployment
 
+Using the prebuilt container image:
+```bash
+docker run -d -p 80:8000 -e PORT=8000 --name sbf-trainer ghcr.io/lomdiv/sailtrainer:latest
+```
+
+Or building from source:
 ```bash
 docker build -t sbf-sail-trainer -f src/Dockerfile .
-docker run -p 80:8000 -e PORT=8000 sbf-sail-trainer
+docker run -d -p 80:8000 -e PORT=8000 --name sbf-trainer sbf-sail-trainer
 ```
 
 ---

@@ -55,7 +55,14 @@ Open your browser at:
 4. The service will build and host automatically!
 
 ### Option B: Docker Container
+
+**Run prebuilt image (GHCR):**
 ```bash
-docker build -t sbf-trainer -f src/Dockerfile .
-docker run -p 8000:8000 sbf-trainer
+docker run -d -p 8000:8000 --name sbf-trainer ghcr.io/lomdiv/sailtrainer:latest
+```
+
+**Build & run from source:**
+```bash
+docker build -t sbf-trainer -f Dockerfile ..
+docker run -d -p 8000:8000 --name sbf-trainer sbf-trainer
 ```
