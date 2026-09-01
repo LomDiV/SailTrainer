@@ -7699,7 +7699,7 @@
               "image": "n/a"
             },
             {
-              "text": "Fahrzeug vor Anker mit mehr als 100 m Länge. Den Navigationsaufgaben liegt die Übungskarte D49 (Mündungen der Jade, Weser und Elbe) zugrunde. Die einzelnen Navigationsaufgaben sind in der Prüfung jeweils anhand folgender Kartenausschnitte zu bearbeiten: N E 1. 53°46,06', 007°43,12'; N54°00,42', E008°00,00' 2. N53°50,48', E007°57,54'; N54°05,24', E008°14,48' 3. N53°53,36', E007°51,12'; N54°13,80', E008°15,00' 4. N53°46,00', E007°49,00'; N54°06,00', E008°13,00' 5. N53°43,00', E007°24,00'; N53°57,00', E007°55,00' 6. N53°48,20', E007°24,00'; N54°08,54', E007°48,00' 7. N53°54,24', E008°15,24'; N54°09,00', E008°32,12' 8. N53°50,00', E008°04,00'; N54°01,00', E008°32,00' Aus den nachfolgenden 15 Fragen werden jeweils 9 Fragen für jede Navigationsaufgabe ausgewählt. rwK",
+              "text": "Fahrzeug vor Anker mit mehr als 100 m Länge.",
               "correct": "N",
               "image": "n/a"
             }
@@ -7710,7 +7710,7 @@
     },
     {
       "name": "Navigationsaufgaben",
-      "comment": "1. N53°46,06', E007°43,12'; N54°00,42', E008°00,00' 2. N53°50,48', E007°57,54'; N54°05,24', E008°14,48' 3. N53°53,36', E007°51,12'; N54°13,80', E008°15,00' 4. N53°46,00', E007°49,00'; N54°06,00', E008°13,00' 5. N53°43,00', E007°24,00'; N53°57,00', E007°55,00' 6. N53°48,20', E007°24,00'; N54°08,54', E007°48,00' 7. N53°54,24', E008°15,24'; N54°09,00', E008°32,12' 8. N53°50,00', E008°04,00'; N54°01,00', E008°32,00' Aus den nachfolgenden 15 Fragen werden jeweils 9 Fragen für jede Navigationsaufgabe ausgewählt. 286. Wie lautet der rwK? 287. Tragen Sie den Kurs in die Seekarte ein. 288. Wie lautet der MgK? 289. Wie lauten die Peilungen? 290. Tragen Sie die Peilungen in die Seekarte ein. 291. Entnehmen Sie der Seekarte die geographische Position. 292. Tragen Sie die Position in die Seekarte ein. 293. Wie groß ist die Distanz? 294. Auf welcher Position befindet sich das Schiff nach Koppelort? 295. Wie lautet die Besteckversetzung? 296. In welcher Zeit erreichen Sie das Ziel?",
+      "comment": "Hinweis: Den Navigationsaufgaben liegt die Übungskarte D49 (Mündungen der Jade, Weser und Elbe) zugrunde. Die einzelnen Navigationsaufgaben sind in der Prüfung jeweils anhand folgender Kartenausschnitte zu bearbeiten: 1. N53°46,06', E007°43,12'; N54°00,42', E008°00,00' 2. N53°50,48', E007°57,54'; N54°05,24', E008°14,48' 3. N53°53,36', E007°51,12'; N54°13,80', E008°15,00' 4. N53°46,00', E007°49,00'; N54°06,00', E008°13,00' 5. N53°43,00', E007°24,00'; N53°57,00', E007°55,00' 6. N53°48,20', E007°24,00'; N54°08,54', E007°48,00' 7. N53°54,24', E008°15,24'; N54°09,00', E008°32,12' 8. N53°50,00', E008°04,00'; N54°01,00', E008°32,00' Aus den nachfolgenden 15 Fragen werden jeweils 9 Fragen für jede Navigationsaufgabe ausgewählt. 286. Wie lautet der rwK? 287. Tragen Sie den Kurs in die Seekarte ein. 288. Wie lautet der MgK? 289. Wie lauten die Peilungen? 290. Tragen Sie die Peilungen in die Seekarte ein. 291. Entnehmen Sie der Seekarte die geographische Position. 292. Tragen Sie die Position in die Seekarte ein. 293. Wie groß ist die Distanz? 294. Auf welcher Position befindet sich das Schiff nach Koppelort? 295. Wie lautet die Besteckversetzung? 296. In welcher Zeit erreichen Sie das Ziel?",
       "questions": [
         {
           "id": "286",
