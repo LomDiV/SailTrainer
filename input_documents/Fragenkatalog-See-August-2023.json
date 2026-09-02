@@ -2011,10 +2011,10 @@
         },
         {
           "id": "75",
-          "text": "Welche Sportboote sind von der Fahrerlaubnispflicht auf den Seeschifffahrtsstraßen ausgenommen? 15",
+          "text": "Welche Sportboote sind von der Fahrerlaubnispflicht auf den Seeschifffahrtsstraßen ausgenommen?",
           "answers": [
             {
-              "text": "Sportboote ohne Antriebsmaschine oder solche mit einer größten, nicht überschreitbaren Nutzleistung von 11,03 Kilowatt ( PS bzw. S1 ) bei Verwendung eines Verbrennungsmotors 7,5 Kilowatt bei Verwendung eines Elektromotors Betriebsart (Dauerbetrieb) oder weniger. m",
+              "text": "Sportboote ohne Antriebsmaschine oder solche mit einer größten, nicht überschreitbaren Nutzleistung von 11,03 Kilowatt ( PS bzw. S1 ) bei Verwendung eines Verbrennungsmotors 7,5 Kilowatt bei Verwendung eines Elektromotors Betriebsart (Dauerbetrieb) oder weniger.",
               "correct": "Y",
               "image": "n/a"
             },
@@ -2284,7 +2284,7 @@
           "text": "Welche Vorschriften regeln die Ausrüstung, Anordnung und Anbringung der Positionslaternen, Sichtzeichen und Schallsignalanlagen auf Fahrzeugen?",
           "answers": [
             {
-              "text": "Die Kollisionsverhütungsregeln (KVR), die Seeschifffahrtsstraßen-Ordnung (SeeSchStrO) und die Schifffahrtsordnung EmsSchO Emsmündung ( ).",
+              "text": "Die Kollisionsverhütungsregeln (KVR), die Seeschifffahrtsstraßen-Ordnung (SeeSchStrO) und die Schifffahrtsordnung Emsmündung (EmsSchO).",
               "correct": "Y",
               "image": "n/a"
             },
@@ -6142,7 +6142,7 @@
         },
         {
           "id": "228",
-          "text": "Was verstehen Sie gemäß Nordsee-Befahrens-Verordnung ( ) unter Schnellfahrkorridore?",
+          "text": "Was verstehen Sie gemäß Nordsee-Befahrens-Verordnung (NordSBefV) unter Schnellfahrkorridore?",
           "answers": [
             {
               "text": "Ausgewiesene Wasserflächen für den gewerblichen Verkehr.",
@@ -7144,7 +7144,7 @@
           "text": "Was zeigt die folgende Abbildung? hPa",
           "answers": [
             {
-              "text": "Abbildung eines Hochdruckgebietes auf der Nordhalbkugel, Isobaren mit Angabe des Luftdrucks in .",
+              "text": "Abbildung eines Hochdruckgebietes auf der Nordhalbkugel, Isobaren mit Angabe des Luftdrucks in hPa.",
               "correct": "Y",
               "image": "n/a"
             },
